@@ -1,0 +1,9 @@
+TODO:
+    -make the liv button disable when it clicks
+    -change colors for this app
+    -try to make the app into apk
+
+FIXME:
+    -change the app title
+
+
