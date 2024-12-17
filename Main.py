@@ -101,35 +101,46 @@ class SignLanguageApp(App):
 
     def detect_sign(self, lm_list):
         """ Detect signs based on landmarks. """
-        if lm_list[8].y < lm_list[7].y and lm_list[12].y < lm_list[11].y:  # Peace sign
-            if lm_list[16].y > lm_list[15].y and lm_list[20].y > lm_list[19].y:
-                return "نعم، لقد فزنا."
-
-        if lm_list[8].y < lm_list[7].y and lm_list[20].y < lm_list[19].y:  # I love you sign
-            if lm_list[12].y > lm_list[11].y and lm_list[16].y > lm_list[15].y:
-                if lm_list[4].x < lm_list[3].x:
-                    return "أنا أحبك!"
-
-        if lm_list[4].y < lm_list[3].y:  # Thumbs up
-            if lm_list[8].y > lm_list[6].y and lm_list[12].y > lm_list[10].y:
-                return "أعجبني!"
-            
+        # Check for "victory" ✌ 
+        if lm_list[8].y < lm_list[7].y and lm_list[12].y < lm_list[11].y:  # Index and middle fingers up
+            if lm_list[16].y > lm_list[15].y and lm_list[20].y > lm_list[19].y:  # Ring and pinky folded
+                return "نعم, لقد انتصرنا"  # Peace sign detected
+        
+        # Check for "I Love You" 🤟
+        if lm_list[8].y < lm_list[7].y and lm_list[20].y < lm_list[19].y:  # Index and pinky fingers up
+            if lm_list[12].y > lm_list[11].y and lm_list[16].y > lm_list[15].y:  # Middle and ring fingers down
+                if lm_list[4].x < lm_list[3].x:  # Thumb extended (optional)
+                    return "انا احبك"
+        
+        # Check for "Like" 👍
+        if lm_list[4].y < lm_list[3].y:  # Thumb up
+            if lm_list[8].y > lm_list[6].y and lm_list[12].y > lm_list[10].y:  # Index and middle folded
+                if lm_list[16].y > lm_list[14].y and lm_list[20].y > lm_list[18].y:  # Ring and pinky folded
+                    return "اعجاب"  # Thumbs Up sign detected
+        #check for Dislike 👎
         if lm_list[4].y > lm_list[3].y:  # Thumb pointing down
             if lm_list[8].y > lm_list[6].y and lm_list[12].y > lm_list[10].y and lm_list[16].y > lm_list[14].y and lm_list[20].y > lm_list[18].y:  # Other fingers folded down
-                return "لم يعجبني"
-    
-    # Check for "Stop" gesture (All fingers straight up)
+                return "عدم اعجاب"
+        
+        # Check for "Stop" ✋
         if lm_list[8].y < lm_list[6].y and lm_list[12].y < lm_list[10].y:  # Index and middle up
             if lm_list[16].y < lm_list[14].y and lm_list[20].y < lm_list[18].y:  # Ring and pinky up
                 if lm_list[4].x < lm_list[3].x:  # Thumb extended
-                    return "توقف!"  # Stop gesture detected
-    
-    # Check for "OK" (👌) sign (Thumb and index finger form a circle, others stretched)
+                    return "توقف"  # Stop gesture detected
+        
+        # Check for "OK" (👌) sign (Thumb and index finger form a circle, others stretched)
         if lm_list[4].x - lm_list[8].x < 0.03 and lm_list[4].y - lm_list[8].y < 0.03:  # Thumb and index tips are close
             if lm_list[12].y < lm_list[10].y and lm_list[16].y < lm_list[14].y and lm_list[20].y < lm_list[18].y:  # Other fingers are stretched
-                return "ممتاز!"  # OK sign detected
+                return "بالضبط"  # OK sign detected
 
-        return "لم يتم اكتشاف إشارة"
+        # Check for "Fist" (👊) sign
+        if lm_list[4].y < lm_list[3].y and lm_list[8].y < lm_list[7].y and lm_list[12].y < lm_list[11].y and lm_list[16].y < lm_list[15].y and lm_list[20].y < lm_list[19].y:
+            # All fingers are curled down
+            return "انا او نفسي"  # Fist sign detected
+
+            
+
+        return "لم يتم التقاط اشاره"
 
 if __name__ == '__main__':
     SignLanguageApp().run()
